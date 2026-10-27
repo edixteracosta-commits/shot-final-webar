@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#050505" />
+  <title>Shot Final — Experiencia</title>
+
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #050505;
+      --panel: rgba(8, 8, 8, .82);
+      --line: rgba(255,255,255,.22);
+      --text: #fff;
+      --muted: rgba(255,255,255,.72);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    #ar-scene { position:fixed; inset:0; width:100%; height:100%; }
+    .ui { position:fixed; inset:0; z-index:20; pointer-events:none; display:flex; flex-direction:column; justify-content:space-between; padding:max(18px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom)); }
+    .topbar { display:flex; justify-content:center; pointer-events:none; }
+    .brand { padding:9px 14px; border:1px solid var(--line); border-radius:999px; background:rgba(0,0,0,.44); backdrop-filter:blur(10px); color:var(--text); letter-spacing:.18em; font-weight:700; font-size:12px; }
+    .center-guide { align-self:center; width:min(78vw,390px); aspect-ratio:1/1.18; position:relative; opacity:0; transition:opacity .35s ease; }
+    body.scanning .center-guide { opacity:1; }
+    .corner { position:absolute; width:48px; height:48px; border-color:rgba(255,255,255,.9); border-style:solid; }
+    .tl { left:0; top:0; border-width:2px 0 0 2px; } .tr { right:0; top:0; border-width:2px 2px 0 0; } .bl { left:0; bottom:0; border-width:0 0 2px 2px; } .br { right:0; bottom:0; border-width:0 2px 2px 0; }
+    .bottom { width:min(92vw,520px); margin:0 auto; pointer-events:auto; }
+    .panel { background:var(--panel); border:1px solid var(--line); border-radius:22px; padding:18px; backdrop-filter:blur(16px); box-shadow:0 18px 60px rgba(0,0,0,.35); }
+    #intro { text-align:center; }
+    #intro h1, #reveal h1 { margin:0 0 8px; font-size:clamp(23px,6vw,34px); line-height:1; letter-spacing:-.03em; }
+    #intro p, #reveal p { margin:0 0 16px; color:var(--muted); line-height:1.42; font-size:14px; }
+    button,.cta { width:100%; min-height:52px; border:0; border-radius:15px; font:inherit; font-weight:800; letter-spacing:.02em; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+    #start,.cta { background:#fff; color:#050505; }
+    #status { margin-top:11px; min-height:20px; color:var(--muted); font-size:12px; }
+    #reveal { display:none; transform:translateY(18px); opacity:0; transition:opacity .28s ease,transform .28s ease; }
+    body.found #reveal { display:block; opacity:1; transform:translateY(0); }
+    body.found #intro { display:none; }
+    body.found .center-guide { opacity:0; }
+    .found-chip { display:inline-block; margin-bottom:10px; font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.78); }
+    .secondary { margin-top:10px; text-align:center; color:rgba(255,255,255,.58); font-size:11px; }
+    #fatal { display:none; margin-top:10px; color:#ffb6b6; font-size:12px; line-height:1.4; }
+    .mindar-ui-overlay { z-index:5 !important; }
+  </style>
+</head>
+<body>
+  <a-scene id="ar-scene" mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" embedded>
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-entity id="shot-target" mindar-image-target="targetIndex: 0"></a-entity>
+  </a-scene>
+
+  <div class="ui">
+    <div class="topbar"><div class="brand">SHOT FINAL</div></div>
+    <div class="center-guide" aria-hidden="true"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span></div>
+    <div class="bottom">
+      <section id="intro" class="panel">
+        <h1>Apunta al logo.</h1>
+        <p>Activa la cámara y enfoca el logo original de Shot Final.</p>
+        <button id="start" type="button">Activar cámara</button>
+        <div id="status">No necesitas instalar ninguna app.</div>
+        <div id="fatal"></div>
+      </section>
+      <section id="reveal" class="panel">
+        <span class="found-chip">Logo reconocido</span>
+        <h1>Shot Final</h1>
+        <p>Fotografía y video. Mira una selección de nuestro trabajo.</p>
+        <a class="cta" href="https://shotfinal44.pixieset.com/portafolio/" rel="noopener">Ver portafolio</a>
+        <div class="secondary">shotfinal44.pixieset.com</div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const scene=document.querySelector("#ar-scene");
+    const target=document.querySelector("#shot-target");
+    const startButton=document.querySelector("#start");
+    const status=document.querySelector("#status");
+    const fatal=document.querySelector("#fatal");
+    let started=false;
+    const setStatus=(text)=>{status.textContent=text;};
+
+    startButton.addEventListener("click",async()=>{
+      if(started) return;
+      startButton.disabled=true;
+      startButton.textContent="Iniciando…";
+      setStatus("Preparando reconocimiento visual.");
+      try{
+        const system=scene.systems["mindar-image-system"];
+        if(!system) throw new Error("El sistema de reconocimiento aún no está listo.");
+        await system.start();
+        started=true;
+        document.body.classList.add("scanning");
+        startButton.textContent="Cámara activa";
+        setStatus("Apunta al logo completo de Shot Final.");
+      }catch(err){
+        console.error(err);
+        startButton.disabled=false;
+        startButton.textContent="Intentar de nuevo";
+        fatal.style.display="block";
+        fatal.textContent="No se pudo iniciar la cámara. Revisa el permiso de cámara y abre esta página con HTTPS en Chrome o Safari.";
+      }
+    });
+
+    target.addEventListener("targetFound",()=>{
+      document.body.classList.add("found");
+      document.body.classList.remove("scanning");
+      if(navigator.vibrate) navigator.vibrate(35);
+    });
+
+    scene.addEventListener("arError",()=>{
+      fatal.style.display="block";
+      fatal.textContent="El navegador no pudo iniciar la experiencia AR. Verifica permisos de cámara y compatibilidad del dispositivo.";
+    });
+  </script>
+</body>
+</html>
