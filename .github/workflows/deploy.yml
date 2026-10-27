@@ -1,0 +1,72 @@
+name: Build and deploy Shot Final WebAR
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Restore target image
+        shell: bash
+        run: |
+          mkdir -p assets
+          base64 --decode assets/target.b64 > assets/target.png
+          file assets/target.png
+
+      - name: Install MindAR compiler dependencies
+        run: |
+          npm init -y
+          npm install mind-ar@1.2.5 canvas@2.11.2
+
+      - name: Compile visual target
+        run: node scripts/compile-target.mjs
+
+      - name: Prepare static site
+        shell: bash
+        run: |
+          mkdir -p _site/assets
+          cp index.html _site/index.html
+          cp assets/targets.mind _site/assets/targets.mind
+          cp assets/target.png _site/assets/target.png
+          touch _site/.nojekyll
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "_site"
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
