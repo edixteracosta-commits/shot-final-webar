@@ -10,40 +10,20 @@
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-    :root {
-      color-scheme: dark;
-      --bg: #050505;
-      --panel: rgba(8, 8, 8, .82);
-      --line: rgba(255,255,255,.22);
-      --text: #fff;
-      --muted: rgba(255,255,255,.72);
-    }
-    * { box-sizing: border-box; }
-    html, body { margin:0; width:100%; height:100%; overflow:hidden; background:var(--bg); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
-    #ar-scene { position:fixed; inset:0; width:100%; height:100%; }
-    .ui { position:fixed; inset:0; z-index:20; pointer-events:none; display:flex; flex-direction:column; justify-content:space-between; padding:max(18px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom)); }
-    .topbar { display:flex; justify-content:center; pointer-events:none; }
-    .brand { padding:9px 14px; border:1px solid var(--line); border-radius:999px; background:rgba(0,0,0,.44); backdrop-filter:blur(10px); color:var(--text); letter-spacing:.18em; font-weight:700; font-size:12px; }
-    .center-guide { align-self:center; width:min(78vw,390px); aspect-ratio:1/1.18; position:relative; opacity:0; transition:opacity .35s ease; }
-    body.scanning .center-guide { opacity:1; }
-    .corner { position:absolute; width:48px; height:48px; border-color:rgba(255,255,255,.9); border-style:solid; }
-    .tl { left:0; top:0; border-width:2px 0 0 2px; } .tr { right:0; top:0; border-width:2px 2px 0 0; } .bl { left:0; bottom:0; border-width:0 0 2px 2px; } .br { right:0; bottom:0; border-width:0 2px 2px 0; }
-    .bottom { width:min(92vw,520px); margin:0 auto; pointer-events:auto; }
-    .panel { background:var(--panel); border:1px solid var(--line); border-radius:22px; padding:18px; backdrop-filter:blur(16px); box-shadow:0 18px 60px rgba(0,0,0,.35); }
-    #intro { text-align:center; }
-    #intro h1, #reveal h1 { margin:0 0 8px; font-size:clamp(23px,6vw,34px); line-height:1; letter-spacing:-.03em; }
-    #intro p, #reveal p { margin:0 0 16px; color:var(--muted); line-height:1.42; font-size:14px; }
-    button,.cta { width:100%; min-height:52px; border:0; border-radius:15px; font:inherit; font-weight:800; letter-spacing:.02em; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
-    #start,.cta { background:#fff; color:#050505; }
-    #status { margin-top:11px; min-height:20px; color:var(--muted); font-size:12px; }
-    #reveal { display:none; transform:translateY(18px); opacity:0; transition:opacity .28s ease,transform .28s ease; }
-    body.found #reveal { display:block; opacity:1; transform:translateY(0); }
-    body.found #intro { display:none; }
-    body.found .center-guide { opacity:0; }
-    .found-chip { display:inline-block; margin-bottom:10px; font-size:11px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.78); }
-    .secondary { margin-top:10px; text-align:center; color:rgba(255,255,255,.58); font-size:11px; }
-    #fatal { display:none; margin-top:10px; color:#ffb6b6; font-size:12px; line-height:1.4; }
-    .mindar-ui-overlay { z-index:5 !important; }
+    :root{color-scheme:dark;--bg:#050505;--panel:rgba(8,8,8,.84);--line:rgba(255,255,255,.22);--text:#fff;--muted:rgba(255,255,255,.72)}
+    *{box-sizing:border-box} html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    #ar-scene{position:fixed;inset:0;width:100%;height:100%}
+    .ui{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:max(18px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom))}
+    .topbar{display:flex;justify-content:center}.brand{padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.44);backdrop-filter:blur(10px);color:var(--text);letter-spacing:.18em;font-weight:700;font-size:12px}
+    .center-guide{align-self:center;width:min(78vw,390px);aspect-ratio:1/1.18;position:relative;opacity:0;transition:opacity .35s ease} body.scanning .center-guide{opacity:1}
+    .corner{position:absolute;width:48px;height:48px;border-color:rgba(255,255,255,.9);border-style:solid}.tl{left:0;top:0;border-width:2px 0 0 2px}.tr{right:0;top:0;border-width:2px 2px 0 0}.bl{left:0;bottom:0;border-width:0 0 2px 2px}.br{right:0;bottom:0;border-width:0 2px 2px 0}
+    .bottom{width:min(92vw,520px);margin:0 auto;pointer-events:auto}.panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;backdrop-filter:blur(16px);box-shadow:0 18px 60px rgba(0,0,0,.35)}
+    #intro{text-align:center} #intro h1,#reveal h1{margin:0 0 8px;font-size:clamp(23px,6vw,34px);line-height:1;letter-spacing:-.03em} #intro p,#reveal p{margin:0 0 16px;color:var(--muted);line-height:1.42;font-size:14px}
+    button,.cta{width:100%;min-height:52px;border:0;border-radius:15px;font:inherit;font-weight:800;letter-spacing:.02em;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center} #start,.cta{background:#fff;color:#050505} #start:disabled{opacity:.6;cursor:default}
+    #status{margin-top:11px;min-height:20px;color:var(--muted);font-size:12px;line-height:1.4} #fatal{display:none;margin-top:10px;color:#ffb6b6;font-size:12px;line-height:1.45}
+    #browserHint{display:none;margin-top:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.15);color:#fff;background:rgba(255,255,255,.06);font-size:12px;line-height:1.45}
+    #reveal{display:none;transform:translateY(18px);opacity:0;transition:opacity .28s ease,transform .28s ease} body.found #reveal{display:block;opacity:1;transform:translateY(0)} body.found #intro{display:none} body.found .center-guide{opacity:0}
+    .found-chip{display:inline-block;margin-bottom:10px;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.78)} .secondary{margin-top:10px;text-align:center;color:rgba(255,255,255,.58);font-size:11px}.mindar-ui-overlay{z-index:5!important}
   </style>
 </head>
 <body>
@@ -62,6 +42,7 @@
         <button id="start" type="button">Activar cámara</button>
         <div id="status">No necesitas instalar ninguna app.</div>
         <div id="fatal"></div>
+        <div id="browserHint">Si abriste este enlace dentro de ChatGPT, Facebook, Instagram u otra app, usa el menú del navegador y elige <strong>Abrir en Chrome</strong> o <strong>Abrir en Safari</strong>. Después permite el acceso a la cámara.</div>
       </section>
       <section id="reveal" class="panel">
         <span class="found-chip">Logo reconocido</span>
@@ -74,45 +55,98 @@
   </div>
 
   <script>
-    const scene=document.querySelector("#ar-scene");
-    const target=document.querySelector("#shot-target");
-    const startButton=document.querySelector("#start");
-    const status=document.querySelector("#status");
-    const fatal=document.querySelector("#fatal");
+    const scene=document.querySelector('#ar-scene');
+    const target=document.querySelector('#shot-target');
+    const startButton=document.querySelector('#start');
+    const status=document.querySelector('#status');
+    const fatal=document.querySelector('#fatal');
+    const browserHint=document.querySelector('#browserHint');
     let started=false;
-    const setStatus=(text)=>{status.textContent=text;};
+    let starting=false;
 
-    startButton.addEventListener("click",async()=>{
-      if(started) return;
+    const setStatus=(text)=>{status.textContent=text};
+    const showError=(text,showHint=false)=>{
+      fatal.style.display='block';
+      fatal.textContent=text;
+      browserHint.style.display=showHint?'block':'none';
+      startButton.disabled=false;
+      startButton.textContent='Intentar de nuevo';
+      starting=false;
+    };
+
+    const waitForMindAR=(timeout=10000)=>new Promise((resolve,reject)=>{
+      const begun=Date.now();
+      const check=()=>{
+        const system=scene.systems && scene.systems['mindar-image-system'];
+        if(scene.hasLoaded && system) return resolve(system);
+        if(Date.now()-begun>timeout) return reject(new Error('MindAR no terminó de cargar.'));
+        requestAnimationFrame(check);
+      };
+      check();
+    });
+
+    const explainCameraError=(err)=>{
+      const name=err && err.name ? err.name : '';
+      if(name==='NotAllowedError') return ['El permiso de cámara está bloqueado para esta página. Permite la cámara en el navegador e inténtalo otra vez.',true];
+      if(name==='NotFoundError') return ['No se encontró una cámara disponible en este dispositivo.',false];
+      if(name==='NotReadableError') return ['La cámara existe, pero otra aplicación o el sistema la está usando. Cierra otras apps que usen cámara e inténtalo de nuevo.',false];
+      if(name==='SecurityError' || name==='TypeError') return ['Este navegador no permite usar la cámara en este contexto. Abre el enlace directamente en Chrome o Safari.',true];
+      return ['No se pudo iniciar la cámara. Abre esta página directamente en Chrome o Safari y revisa el permiso de cámara.',true];
+    };
+
+    startButton.addEventListener('click',async()=>{
+      if(started||starting) return;
+      starting=true;
+      fatal.style.display='none';
+      browserHint.style.display='none';
       startButton.disabled=true;
-      startButton.textContent="Iniciando…";
-      setStatus("Preparando reconocimiento visual.");
+      startButton.textContent='Solicitando cámara…';
+      setStatus('Comprobando acceso a la cámara.');
+
       try{
-        const system=scene.systems["mindar-image-system"];
-        if(!system) throw new Error("El sistema de reconocimiento aún no está listo.");
-        await system.start();
-        started=true;
-        document.body.classList.add("scanning");
-        startButton.textContent="Cámara activa";
-        setStatus("Apunta al logo completo de Shot Final.");
+        if(!window.isSecureContext) throw new DOMException('HTTPS requerido','SecurityError');
+        if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new DOMException('getUserMedia no disponible','TypeError');
+
+        // Pedimos el permiso directamente desde el toque del usuario.
+        const testStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'}}});
+        testStream.getTracks().forEach(track=>track.stop());
+
+        setStatus('Permiso concedido. Iniciando reconocimiento…');
+        startButton.textContent='Iniciando…';
+
+        const system=await waitForMindAR();
+        system.start();
+
+        // arReady confirma que MindAR realmente abrió la cámara.
+        setTimeout(()=>{
+          if(!started && starting) showError('La cámara recibió permiso, pero el motor de reconocimiento no terminó de iniciar. Prueba abrir el enlace directamente en Chrome o Safari.',true);
+        },15000);
       }catch(err){
         console.error(err);
-        startButton.disabled=false;
-        startButton.textContent="Intentar de nuevo";
-        fatal.style.display="block";
-        fatal.textContent="No se pudo iniciar la cámara. Revisa el permiso de cámara y abre esta página con HTTPS en Chrome o Safari.";
+        const [message,hint]=explainCameraError(err);
+        showError(message,hint);
       }
     });
 
-    target.addEventListener("targetFound",()=>{
-      document.body.classList.add("found");
-      document.body.classList.remove("scanning");
-      if(navigator.vibrate) navigator.vibrate(35);
+    scene.addEventListener('arReady',()=>{
+      started=true;
+      starting=false;
+      document.body.classList.add('scanning');
+      startButton.disabled=true;
+      startButton.textContent='Cámara activa';
+      setStatus('Cámara activa. Apunta al logo completo de Shot Final.');
+      fatal.style.display='none';
+      browserHint.style.display='none';
     });
 
-    scene.addEventListener("arError",()=>{
-      fatal.style.display="block";
-      fatal.textContent="El navegador no pudo iniciar la experiencia AR. Verifica permisos de cámara y compatibilidad del dispositivo.";
+    scene.addEventListener('arError',()=>{
+      if(!started) showError('MindAR no pudo abrir la cámara. Revisa los permisos o abre el enlace directamente en Chrome o Safari.',true);
+    });
+
+    target.addEventListener('targetFound',()=>{
+      document.body.classList.add('found');
+      document.body.classList.remove('scanning');
+      if(navigator.vibrate) navigator.vibrate(35);
     });
   </script>
 </body>
