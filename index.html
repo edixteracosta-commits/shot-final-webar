@@ -14,21 +14,39 @@
     *{box-sizing:border-box}
     html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 
-    /* Image tracking de MindAR debe trabajar en modo fullscreen. No usamos `embedded`,
-       porque en algunos Android separa el tamaño del canvas y el video de cámara. */
+    /* Cámara MindAR: video visible abajo, canvas AR transparente arriba. */
+    video{
+      position:fixed!important;
+      inset:0!important;
+      width:100vw!important;
+      height:100dvh!important;
+      min-width:100vw!important;
+      min-height:100dvh!important;
+      object-fit:cover!important;
+      object-position:center center!important;
+      z-index:0!important;
+      display:block!important;
+      background:#000!important;
+    }
+
     #ar-scene{
       position:fixed!important;
       inset:0!important;
       width:100vw!important;
       height:100dvh!important;
       margin:0!important;
+      z-index:1!important;
+      background:transparent!important;
     }
+
     #ar-scene canvas,
     #ar-scene .a-canvas{
       position:fixed!important;
       inset:0!important;
       width:100vw!important;
       height:100dvh!important;
+      z-index:1!important;
+      background:transparent!important;
     }
 
     .ui{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:max(18px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom))}
@@ -45,7 +63,7 @@
   </style>
 </head>
 <body>
-  <a-scene id="ar-scene" mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+  <a-scene id="ar-scene" mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no;" color-space="sRGB" renderer="alpha: true; colorManagement: true; physicallyCorrectLights: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
     <a-entity id="shot-target" mindar-image-target="targetIndex: 0"></a-entity>
   </a-scene>
@@ -103,6 +121,27 @@
       check();
     });
 
+    const forceTransparentRenderer=()=>{
+      try{
+        if(scene.renderer){
+          scene.renderer.setClearColor(0x000000,0);
+          scene.renderer.setClearAlpha(0);
+          scene.renderer.domElement.style.background='transparent';
+        }
+      }catch(e){console.warn('No se pudo forzar transparencia del renderer',e)}
+    };
+
+    const normalizeCameraVideo=()=>{
+      const videos=document.querySelectorAll('video');
+      videos.forEach(v=>{
+        Object.assign(v.style,{
+          position:'fixed',inset:'0',width:'100vw',height:'100dvh',
+          minWidth:'100vw',minHeight:'100dvh',objectFit:'cover',
+          objectPosition:'center center',zIndex:'0',display:'block',background:'#000'
+        });
+      });
+    };
+
     const explainCameraError=(err)=>{
       const name=err && err.name ? err.name : '';
       if(name==='NotAllowedError') return ['El permiso de cámara está bloqueado para esta página. Permite la cámara en el navegador e inténtalo otra vez.',true];
@@ -111,6 +150,9 @@
       if(name==='SecurityError' || name==='TypeError') return ['Este navegador no permite usar la cámara en este contexto. Abre el enlace directamente en Chrome o Safari.',true];
       return ['No se pudo iniciar la cámara. Abre esta página directamente en Chrome o Safari y revisa el permiso de cámara.',true];
     };
+
+    scene.addEventListener('renderstart',forceTransparentRenderer);
+    scene.addEventListener('loaded',forceTransparentRenderer);
 
     startButton.addEventListener('click',async()=>{
       if(started||starting) return;
@@ -132,7 +174,17 @@
         startButton.textContent='Iniciando…';
 
         const system=await waitForMindAR();
+        forceTransparentRenderer();
         system.start();
+
+        setTimeout(()=>{
+          normalizeCameraVideo();
+          forceTransparentRenderer();
+        },300);
+        setTimeout(()=>{
+          normalizeCameraVideo();
+          forceTransparentRenderer();
+        },1200);
 
         setTimeout(()=>{
           if(!started && starting) showError('La cámara recibió permiso, pero el motor de reconocimiento no terminó de iniciar. Prueba abrir el enlace directamente en Chrome o Safari.',true);
@@ -145,6 +197,8 @@
     });
 
     scene.addEventListener('arReady',()=>{
+      normalizeCameraVideo();
+      forceTransparentRenderer();
       started=true;
       starting=false;
       document.body.classList.add('scanning');
