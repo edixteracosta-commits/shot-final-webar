@@ -9,34 +9,30 @@
     <meta name="theme-color" content="#050505" />
     <title>Shot Final — Identidad Visual y Realidad Aumentada</title>
 
-    <!-- Metadatos SEO para indexación en Google Search e Images -->
-    <meta name="description" content="Página oficial de identidad visual y experiencia WebAR de Shot Final. Fotografía y producción audiovisual dirigida por Edixter Acosta." />
-    <meta name="robots" content="index, follow" />
-    <link rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/" />
+    <!-- La raíz es la herramienta WebAR; la página pública de identidad vive en /shot-final/. -->
+    <meta name="description" content="Experiencia WebAR de Shot Final para reconocer visualmente el logotipo y abrir el portafolio oficial." />
+    <meta name="robots" content="noindex, follow" />
+    <link rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/" />
 
-    <!-- Open Graph -->
-    <meta property="og:title" content="Shot Final — Fotografía y Video" />
-    <meta property="og:description" content="Portafolio y registro oficial de identidad visual de Shot Final." />
+    <!-- Open Graph de la herramienta WebAR -->
+    <meta property="og:title" content="Shot Final — Realidad Aumentada" />
+    <meta property="og:description" content="Experiencia WebAR de Shot Final para reconocer el logotipo y acceder al portafolio." />
     <meta property="og:image" content="https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg" />
-    <meta property="og:url" content="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/" />
+    <meta property="og:url" content="https://edixteracosta-commits.github.io/shot-final-webar/" />
     <meta property="og:type" content="website" />
 
-    <!-- Datos estructurados Schema.org para asociar la marca y el logotipo en Google -->
+    <!-- La entidad pública Shot Final se define únicamente en /shot-final/. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Shot Final",
-      "url": "https://edixteracosta-commits.github.io/shot-final-webar/shot-final/",
-      "logo": "https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg",
-      "sameAs": [
-        "https://shotfinal44.pixieset.com/portafolio/"
-      ],
-      "founder": {
-        "@type": "Person",
-        "name": "Edixter Acosta"
-      },
-      "description": "Estudio profesional de fotografía y producción de video."
+      "@type": "WebApplication",
+      "@id": "https://edixteracosta-commits.github.io/shot-final-webar/#webar",
+      "name": "Shot Final WebAR",
+      "url": "https://edixteracosta-commits.github.io/shot-final-webar/",
+      "applicationCategory": "MultimediaApplication",
+      "about": {
+        "@id": "https://edixteracosta-commits.github.io/shot-final-webar/shot-final/#organization"
+      }
     }
     </script>
 
@@ -97,7 +93,7 @@
     </style>
 </head>
 <body>
-    <a-scene id="ar-scene" mindar-image="imageTargetSrc: ../assets/targets.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no;" color-space="sRGB" renderer="alpha: true; colorManagement: true; physicallyCorrectLights: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene id="ar-scene" mindar-image="imageTargetSrc: assets/targets.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no;" color-space="sRGB" renderer="alpha: true; colorManagement: true; physicallyCorrectLights: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
         <a-entity id="shot-target" mindar-image-target="targetIndex: 0"></a-entity>
     </a-scene>
