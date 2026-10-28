@@ -27,19 +27,21 @@ jobs:
         with:
           node-version: "18"
 
-      - name: Restore target image
+      - name: Restore target images
         shell: bash
         run: |
           mkdir -p assets
           base64 --decode assets/target.b64 > assets/target.png
+          base64 --decode assets/target-real.b64 > assets/target-real.jpg
           file assets/target.png
+          file assets/target-real.jpg
 
       - name: Install MindAR compiler dependencies
         run: |
           npm init -y
           npm install mind-ar@1.2.5 canvas@2.11.2
 
-      - name: Compile visual target
+      - name: Compile visual targets
         run: node scripts/compile-target.mjs
 
       - name: Prepare static site
@@ -49,6 +51,7 @@ jobs:
           cp index.html _site/index.html
           cp assets/targets.mind _site/assets/targets.mind
           cp assets/target.png _site/assets/target.png
+          cp assets/target-real.jpg _site/assets/target-real.jpg
           touch _site/.nojekyll
 
       - name: Configure GitHub Pages
