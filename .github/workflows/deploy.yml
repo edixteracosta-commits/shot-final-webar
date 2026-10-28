@@ -33,8 +33,10 @@ jobs:
           mkdir -p assets
           base64 --decode assets/target.b64 > assets/target.png
           base64 --decode assets/target-real.b64 > assets/target-real.jpg
+          cp assets/target-real.jpg assets/logo-shot-final-oficial.jpg
           file assets/target.png
           file assets/target-real.jpg
+          file assets/logo-shot-final-oficial.jpg
 
       - name: Install MindAR compiler dependencies
         run: |
@@ -47,11 +49,15 @@ jobs:
       - name: Prepare static site
         shell: bash
         run: |
-          mkdir -p _site/assets
+          mkdir -p _site/assets _site/shot-final
           cp index.html _site/index.html
+          cp shot-final/index.html _site/shot-final/index.html
+          cp sitemap.xml _site/sitemap.xml
+          cp robots.txt _site/robots.txt
           cp assets/targets.mind _site/assets/targets.mind
           cp assets/target.png _site/assets/target.png
           cp assets/target-real.jpg _site/assets/target-real.jpg
+          cp assets/logo-shot-final-oficial.jpg _site/assets/logo-shot-final-oficial.jpg
           touch _site/.nojekyll
 
       - name: Configure GitHub Pages
