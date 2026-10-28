@@ -10,9 +10,27 @@
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-    :root{color-scheme:dark;--bg:#050505;--panel:rgba(8,8,8,.84);--line:rgba(255,255,255,.22);--text:#fff;--muted:rgba(255,255,255,.72)}
-    *{box-sizing:border-box} html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    #ar-scene{position:fixed;inset:0;width:100%;height:100%}
+    :root{color-scheme:dark;--panel:rgba(8,8,8,.84);--line:rgba(255,255,255,.22);--text:#fff;--muted:rgba(255,255,255,.72)}
+    *{box-sizing:border-box}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+
+    /* Image tracking de MindAR debe trabajar en modo fullscreen. No usamos `embedded`,
+       porque en algunos Android separa el tamaño del canvas y el video de cámara. */
+    #ar-scene{
+      position:fixed!important;
+      inset:0!important;
+      width:100vw!important;
+      height:100dvh!important;
+      margin:0!important;
+    }
+    #ar-scene canvas,
+    #ar-scene .a-canvas{
+      position:fixed!important;
+      inset:0!important;
+      width:100vw!important;
+      height:100dvh!important;
+    }
+
     .ui{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:max(18px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom))}
     .topbar{display:flex;justify-content:center}.brand{padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.44);backdrop-filter:blur(10px);color:var(--text);letter-spacing:.18em;font-weight:700;font-size:12px}
     .center-guide{align-self:center;width:min(78vw,390px);aspect-ratio:1/1.18;position:relative;opacity:0;transition:opacity .35s ease} body.scanning .center-guide{opacity:1}
@@ -27,7 +45,7 @@
   </style>
 </head>
 <body>
-  <a-scene id="ar-scene" mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false" embedded>
+  <a-scene id="ar-scene" mindar-image="imageTargetSrc: ./assets/targets.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
     <a-entity id="shot-target" mindar-image-target="targetIndex: 0"></a-entity>
   </a-scene>
@@ -107,7 +125,6 @@
         if(!window.isSecureContext) throw new DOMException('HTTPS requerido','SecurityError');
         if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new DOMException('getUserMedia no disponible','TypeError');
 
-        // Pedimos el permiso directamente desde el toque del usuario.
         const testStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'}}});
         testStream.getTracks().forEach(track=>track.stop());
 
@@ -117,7 +134,6 @@
         const system=await waitForMindAR();
         system.start();
 
-        // arReady confirma que MindAR realmente abrió la cámara.
         setTimeout(()=>{
           if(!started && starting) showError('La cámara recibió permiso, pero el motor de reconocimiento no terminó de iniciar. Prueba abrir el enlace directamente en Chrome o Safari.',true);
         },15000);
