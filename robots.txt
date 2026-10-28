@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://edixteracosta-commits.github.io/shot-final-webar/sitemap.xml
