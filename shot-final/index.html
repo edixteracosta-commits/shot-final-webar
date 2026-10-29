@@ -7,13 +7,22 @@
   <meta name="description" content="Identidad visual oficial de Shot Final, marca de fotografía y producción de video especializada en eventos, conciertos y cobertura audiovisual.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/">
+  <link rel="icon" href="../assets/logo-shot-final-oficial.jpg" type="image/jpeg">
 
   <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Shot Final">
   <meta property="og:title" content="Shot Final — Fotografía y Video">
   <meta property="og:description" content="Logo e identidad visual oficial de Shot Final. Acceso al portafolio de fotografía y video.">
   <meta property="og:url" content="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/">
   <meta property="og:image" content="https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg">
-  <meta property="og:image:alt" content="Logo oficial de Shot Final, fotografía y video">
+  <meta property="og:image:alt" content="Logotipo oficial de Shot Final con ilustración de cámara y texto SHOT Final">
+  <meta property="og:image:width" content="384">
+  <meta property="og:image:height" content="384">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Shot Final — Fotografía y Video">
+  <meta name="twitter:description" content="Identidad visual oficial de Shot Final y acceso a su portafolio de fotografía y video.">
+  <meta name="twitter:image" content="https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg">
 
   <script type="application/ld+json">
   {
@@ -25,13 +34,16 @@
     "url": "https://edixteracosta-commits.github.io/shot-final-webar/shot-final/",
     "logo": {
       "@type": "ImageObject",
+      "@id": "https://edixteracosta-commits.github.io/shot-final-webar/shot-final/#logo",
       "contentUrl": "https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg",
       "url": "https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg",
       "width": 384,
       "height": 384,
       "caption": "Logo oficial de Shot Final"
     },
-    "image": "https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg",
+    "image": {
+      "@id": "https://edixteracosta-commits.github.io/shot-final-webar/shot-final/#logo"
+    },
     "description": "Shot Final es una marca de fotografía y producción de video especializada en eventos, conciertos y cobertura audiovisual.",
     "founder": {
       "@type": "Person",
@@ -53,6 +65,9 @@
     p{font-size:17px;color:#333}
     figure{margin:34px 0;text-align:center}
     img{display:block;width:min(100%,640px);height:auto;margin:0 auto;background:#fff}
+    .contrast{background:#050505;border-radius:14px;padding:18px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .cta.secondary{background:#fff;color:#111;border:1px solid #ccc}
     figcaption{margin-top:12px;color:#666;font-size:14px}
     .cta{display:inline-block;margin-top:10px;background:#111;color:#fff;padding:15px 22px;border-radius:999px;text-decoration:none;font-weight:700}
     .meta{margin-top:28px;padding-top:22px;border-top:1px solid #e5e5e5;color:#666;font-size:14px}
@@ -65,17 +80,29 @@
       <p><strong>Fotografía y video para eventos, conciertos y producción audiovisual.</strong></p>
 
       <figure>
-        <img src="../assets/logo-shot-final-oficial.jpg" width="384" height="384" alt="Logo oficial de Shot Final, fotografía y video">
-        <figcaption>Logo oficial de Shot Final.</figcaption>
+        <img src="../assets/logo-shot-final-oficial.jpg" width="384" height="384" alt="Logotipo oficial de Shot Final con ilustración de cámara sobre el texto SHOT Final">
+        <figcaption>Logotipo oficial de Shot Final: ilustración de cámara y texto SHOT Final.</figcaption>
       </figure>
 
       <h2>Identidad visual oficial</h2>
-      <p>Esta imagen corresponde al logotipo oficial de Shot Final. Esta página pública identifica la marca y su identidad visual para buscadores, servicios de búsqueda por imagen y personas que quieran conocer el trabajo de Shot Final.</p>
-      <p>Shot Final desarrolla fotografía, video, cobertura de eventos, conciertos y producción audiovisual.</p>
+      <p>Este es el logotipo que identifica a Shot Final. Su elemento principal es una ilustración lineal de una cámara situada sobre el nombre <strong>SHOT Final</strong>. Esta página reúne la identidad visual y el enlace al portafolio oficial de la marca.</p>
 
-      <a class="cta" href="https://shotfinal44.pixieset.com/portafolio/" rel="noopener">Ver portafolio oficial de Shot Final</a>
+      <h2>Versión de alto contraste</h2>
+      <p>La misma identidad también se utiliza en una versión blanca sobre fondo oscuro para reconocimiento visual y aplicaciones de alto contraste.</p>
+      <figure class="contrast">
+        <img src="../assets/target.png" width="500" height="603" alt="Versión blanca sobre fondo negro del logotipo de Shot Final con ilustración de cámara y texto SHOT Final">
+        <figcaption>Versión de alto contraste del mismo logotipo de Shot Final.</figcaption>
+      </figure>
 
-      <div class="meta">Sitio oficial de identidad visual de Shot Final.</div>
+      <h2>Fotografía y producción audiovisual</h2>
+      <p>Shot Final realiza fotografía, video, cobertura de eventos y conciertos, y producción audiovisual. El portafolio enlazado desde esta página reúne una selección del trabajo de la marca.</p>
+
+      <div class="actions">
+        <a class="cta" href="https://shotfinal44.pixieset.com/portafolio/" rel="noopener">Ver portafolio oficial de Shot Final</a>
+        <a class="cta secondary" href="../">Probar reconocimiento WebAR</a>
+      </div>
+
+      <div class="meta">Página pública de identidad visual de Shot Final.</div>
     </article>
   </main>
 </body>
