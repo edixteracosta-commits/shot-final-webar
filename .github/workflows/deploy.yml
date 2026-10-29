@@ -54,11 +54,37 @@ jobs:
           cp shot-final/index.html _site/shot-final/index.html
           cp sitemap.xml _site/sitemap.xml
           cp robots.txt _site/robots.txt
+          cp googleed1a60310cb8845f.html _site/googleed1a60310cb8845f.html
           cp assets/targets.mind _site/assets/targets.mind
           cp assets/target.png _site/assets/target.png
           cp assets/target-real.jpg _site/assets/target-real.jpg
           cp assets/logo-shot-final-oficial.jpg _site/assets/logo-shot-final-oficial.jpg
           touch _site/.nojekyll
+
+      - name: Verify WebAR and identity invariants
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s _site/index.html
+          test -s _site/shot-final/index.html
+          test -s _site/assets/targets.mind
+          test -s _site/assets/logo-shot-final-oficial.jpg
+          test -s _site/assets/target.png
+          test -s _site/sitemap.xml
+          test -s _site/robots.txt
+          test -s _site/googleed1a60310cb8845f.html
+
+          grep -Fq 'targetIndex: 0' _site/index.html
+          grep -Fq 'targetIndex: 1' _site/index.html
+          grep -Fq 'noindex, follow' _site/index.html
+          grep -Fq 'index, follow, max-image-preview:large' _site/shot-final/index.html
+          grep -Fq 'https://shotfinal44.pixieset.com/portafolio/' _site/index.html
+          grep -Fq 'https://shotfinal44.pixieset.com/portafolio/' _site/shot-final/index.html
+          grep -Fq 'https://edixteracosta-commits.github.io/shot-final-webar/shot-final/' _site/shot-final/index.html
+          grep -Fq 'logo-shot-final-oficial.jpg' _site/shot-final/index.html
+          grep -Fq '../assets/target.png' _site/shot-final/index.html
+          grep -Fq '<loc>https://edixteracosta-commits.github.io/shot-final-webar/shot-final/</loc>' _site/sitemap.xml
+          grep -Fq 'Sitemap: https://edixteracosta-commits.github.io/shot-final-webar/sitemap.xml' _site/robots.txt
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5

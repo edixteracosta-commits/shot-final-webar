@@ -4,12 +4,18 @@ Proyecto WebAR para reconocer visualmente el logo original de **Shot Final** y m
 
 https://shotfinal44.pixieset.com/portafolio/
 
-## Qué hace
+## Arquitectura
+
+- `/` es la herramienta WebAR y se mantiene en `noindex, follow` para no competir con la página pública de identidad.
+- `/shot-final/` es la página pública e indexable que identifica la marca, el logotipo y el portafolio oficial.
+- `sitemap.xml` declara la página pública y sus imágenes de identidad.
+
+## Qué hace el WebAR
 
 1. El visitante abre la página en Chrome o Safari.
 2. Toca **Activar cámara**.
 3. Apunta al logo original de Shot Final.
-4. MindAR reconoce el logo.
+4. MindAR reconoce una de las dos representaciones compiladas del mismo logotipo.
 5. Aparece el botón **Ver portafolio**.
 6. El botón abre Pixieset.
 
@@ -22,35 +28,37 @@ No hay QR visible y el visitante no instala ninguna app.
 - GitHub Pages
 - GitHub Actions para compilar automáticamente el marcador visual `.mind`
 
-## Archivo objetivo
+## Objetivos visuales
 
-`assets/target.b64` contiene una imagen PNG codificada en Base64: el logo blanco de Shot Final sobre fondo oscuro.
+- `assets/target-real.b64` reconstruye el logotipo real y se compila como `targetIndex: 0`.
+- `assets/target.b64` reconstruye la versión de alto contraste; el compilador genera su versión de impresión y la compila como `targetIndex: 1`.
+- La interfaz WebAR escucha ambos índices y ejecuta la misma acción cuando cualquiera es reconocido.
 
-El workflow restaura ese PNG y genera `assets/targets.mind` durante el despliegue. Así el repositorio puede mantenerse completamente en archivos de texto.
+El workflow reconstruye las imágenes, genera `assets/targets.mind` y publica los archivos necesarios durante el despliegue.
 
-## Publicación
+## Publicación y validación
 
-El workflow `.github/workflows/deploy.yml` compila y publica automáticamente.
+El workflow `.github/workflows/deploy.yml` compila, valida y publica automáticamente. Antes de desplegar comprueba, entre otras cosas, que:
 
-Si GitHub Pages no está habilitado todavía:
+- `targets.mind` exista y no esté vacío;
+- ambos `targetIndex` estén declarados;
+- la raíz siga en `noindex` y `/shot-final/` siga indexable;
+- los enlaces al portafolio oficial permanezcan presentes;
+- sitemap, robots y archivo de verificación de Google se publiquen.
 
-1. Abre el repositorio.
-2. **Settings → Pages**.
-3. En **Build and deployment / Source**, selecciona **GitHub Actions**.
-4. Abre la pestaña **Actions** y ejecuta `Build and deploy Shot Final WebAR` si no se inició automáticamente.
-
-La URL esperada, una vez activo Pages, será:
+La URL del proyecto es:
 
 `https://edixteracosta-commits.github.io/shot-final-webar/`
 
+La identidad pública vive en:
+
+`https://edixteracosta-commits.github.io/shot-final-webar/shot-final/`
+
 ## Importante para el reconocimiento
 
-La imagen física debe parecerse al objetivo compilado:
+La imagen física debe parecerse a alguno de los objetivos compilados:
 
-- logo blanco;
-- fondo oscuro/negro;
 - mostrar el logo completo;
 - evitar reflejos muy fuertes;
+- conservar buen contraste;
 - para una tarjeta, conviene que el logo tenga al menos unos 5–7 cm de alto durante las primeras pruebas.
-
-Si luego se usará otra versión del logo (por ejemplo negro sobre blanco), se puede agregar como segundo objetivo.
