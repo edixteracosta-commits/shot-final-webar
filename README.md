@@ -1,6 +1,10 @@
 # Shot Final WebAR
 
-Proyecto WebAR para reconocer visualmente el logo original de **Shot Final** y mostrar un acceso directo al portafolio:
+Proyecto WebAR para reconocer visualmente el logo original de **Shot Final** y dirigir al portafolio oficial:
+
+[![Logotipo oficial de Shot Final](https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg)](https://shotfinal44.pixieset.com/portafolio/)
+
+**Portafolio oficial de Shot Final:**
 
 https://shotfinal44.pixieset.com/portafolio/
 
@@ -9,6 +13,7 @@ https://shotfinal44.pixieset.com/portafolio/
 - `/` es la herramienta WebAR y se mantiene en `noindex, follow` para no competir con la página pública de identidad.
 - `/shot-final/` es la página pública e indexable que identifica la marca, el logotipo y el portafolio oficial.
 - `sitemap.xml` declara la página pública y sus imágenes de identidad.
+- El portafolio de Pixieset es el destino final asociado al reconocimiento del logotipo.
 
 ## Qué hace el WebAR
 
@@ -16,8 +21,8 @@ https://shotfinal44.pixieset.com/portafolio/
 2. Toca **Activar cámara**.
 3. Apunta al logo original de Shot Final.
 4. MindAR reconoce una de las dos representaciones compiladas del mismo logotipo.
-5. Aparece el botón **Ver portafolio**.
-6. El botón abre Pixieset.
+5. La interfaz confirma el reconocimiento.
+6. El navegador redirige automáticamente al portafolio oficial de Shot Final; el botón **Ver portafolio** queda como respaldo visible.
 
 No hay QR visible y el visitante no instala ninguna app.
 
@@ -36,6 +41,11 @@ No hay QR visible y el visitante no instala ninguna app.
 
 El workflow reconstruye las imágenes, genera `assets/targets.mind` y publica los archivos necesarios durante el despliegue.
 
+Para la presencia pública se usan nombres descriptivos y estables:
+
+- `assets/logo-shot-final-oficial.jpg`
+- `assets/logo-shot-final-alto-contraste.png`
+
 ## Publicación y validación
 
 El workflow `.github/workflows/deploy.yml` compila, valida y publica automáticamente. Antes de desplegar comprueba, entre otras cosas, que:
@@ -43,7 +53,8 @@ El workflow `.github/workflows/deploy.yml` compila, valida y publica automática
 - `targets.mind` exista y no esté vacío;
 - ambos `targetIndex` estén declarados;
 - la raíz siga en `noindex` y `/shot-final/` siga indexable;
-- los enlaces al portafolio oficial permanezcan presentes;
+- la redirección del WebAR y los enlaces al portafolio oficial permanezcan presentes;
+- las dos imágenes públicas de identidad estén disponibles;
 - sitemap, robots y archivo de verificación de Google se publiquen.
 
 La URL del proyecto es:
@@ -53,6 +64,10 @@ La URL del proyecto es:
 La identidad pública vive en:
 
 `https://edixteracosta-commits.github.io/shot-final-webar/shot-final/`
+
+El destino oficial es:
+
+`https://shotfinal44.pixieset.com/portafolio/`
 
 ## Importante para el reconocimiento
 
