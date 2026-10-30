@@ -115,14 +115,15 @@
             <section id="reveal" class="panel">
                 <span class="found-chip">Logo reconocido</span>
                 <h1>Shot Final</h1>
-                <p>Fotografía y video. Mira una selección de nuestro trabajo.</p>
-                <a class="cta" href="https://shotfinal44.pixieset.com/portafolio/" rel="noopener">Ver portafolio</a>
-                <div class="secondary">shotfinal44.pixieset.com</div>
+                <p>Identidad confirmada. Abriendo el portafolio oficial.</p>
+                <a class="cta" href="https://shotfinal44.pixieset.com/portafolio/" rel="noopener">Abrir portafolio ahora</a>
+                <div class="secondary">shotfinal44.pixieset.com/portafolio</div>
             </section>
         </div>
     </div>
 
     <script>
+        const PORTFOLIO_URL='https://shotfinal44.pixieset.com/portafolio/';
         const scene=document.querySelector('#ar-scene');
         const targets=[
             document.querySelector('#shot-target'),
@@ -134,6 +135,7 @@
         const browserHint=document.querySelector('#browserHint');
         let started=false;
         let starting=false;
+        let redirectScheduled=false;
 
         const setStatus=(text)=>{status.textContent=text};
         const showError=(text,showHint=false)=>{
@@ -249,9 +251,12 @@
         });
 
         const handleTargetFound=()=>{
+            if(redirectScheduled) return;
+            redirectScheduled=true;
             document.body.classList.add('found');
             document.body.classList.remove('scanning');
             if(navigator.vibrate) navigator.vibrate(35);
+            setTimeout(()=>window.location.assign(PORTFOLIO_URL),900);
         };
 
         targets.forEach(target=>target.addEventListener('targetFound',handleTargetFound));
