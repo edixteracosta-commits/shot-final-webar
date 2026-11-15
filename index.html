@@ -1,265 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
+<!doctype html>
+<html lang="es-MX">
 <head>
-    <!-- Verificación oficial de Google Search Console -->
-    <meta name="google-site-verification" content="29md0HCdgHjmcMPQ5421Ejz4SbBnx88GwK8hf1PLjcM" />
-
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="theme-color" content="#050505" />
-    <link rel="icon" href="assets/logo-shot-final-oficial.jpg" type="image/jpeg" />
-    <title>Shot Final — Identidad Visual y Realidad Aumentada</title>
-
-    <!-- La raíz es la herramienta WebAR; la página pública de identidad vive en /shot-final/. -->
-    <meta name="description" content="Experiencia WebAR de Shot Final para reconocer visualmente el logotipo y abrir el portafolio oficial." />
-    <meta name="robots" content="noindex, follow" />
-    <link rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/" />
-
-    <!-- Open Graph de la herramienta WebAR -->
-    <meta property="og:title" content="Shot Final — Realidad Aumentada" />
-    <meta property="og:description" content="Experiencia WebAR de Shot Final para reconocer el logotipo y acceder al portafolio." />
-    <meta property="og:image" content="https://edixteracosta-commits.github.io/shot-final-webar/assets/logo-shot-final-oficial.jpg" />
-    <meta property="og:url" content="https://edixteracosta-commits.github.io/shot-final-webar/" />
-    <meta property="og:type" content="website" />
-
-    <!-- La entidad pública Shot Final se define únicamente en /shot-final/. -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "@id": "https://edixteracosta-commits.github.io/shot-final-webar/#webar",
-      "name": "Shot Final WebAR",
-      "url": "https://edixteracosta-commits.github.io/shot-final-webar/",
-      "applicationCategory": "MultimediaApplication",
-      "about": {
-        "@id": "https://edixteracosta-commits.github.io/shot-final-webar/shot-final/#organization"
-      }
-    }
-    </script>
-
-    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-
-    <style>
-        :root{color-scheme:dark;--panel:rgba(8,8,8,.84);--line:rgba(255,255,255,.22);--text:#fff;--muted:rgba(255,255,255,.72)}
-        *{box-sizing:border-box}
-        html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#000;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-
-        /* Cámara MindAR: video visible abajo, canvas AR transparente arriba. */
-        video{
-            position:fixed!important;
-            inset:0!important;
-            width:100vw!important;
-            height:100dvh!important;
-            min-width:100vw!important;
-            min-height:100dvh!important;
-            object-fit:cover!important;
-            object-position:center center!important;
-            z-index:0!important;
-            display:block!important;
-            background:#000!important;
-        }
-
-        #ar-scene{
-            position:fixed!important;
-            inset:0!important;
-            width:100vw!important;
-            height:100dvh!important;
-            margin:0!important;
-            z-index:1!important;
-            background:transparent!important;
-        }
-
-        #ar-scene canvas,
-        #ar-scene .a-canvas{
-            position:fixed!important;
-            inset:0!important;
-            width:100vw!important;
-            height:100dvh!important;
-            z-index:1!important;
-            background:transparent!important;
-        }
-
-        .ui{position:fixed;inset:0;z-index:20;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:max(18px,env(safe-area-inset-top)) 18px max(22px,env(safe-area-inset-bottom))}
-        .topbar{display:flex;justify-content:center}.brand{padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(0,0,0,.44);backdrop-filter:blur(10px);color:var(--text);letter-spacing:.18em;font-weight:700;font-size:12px}
-        .center-guide{align-self:center;width:min(78vw,390px);aspect-ratio:1/1.18;position:relative;opacity:0;transition:opacity .35s ease} body.scanning .center-guide{opacity:1}
-        .corner{position:absolute;width:48px;height:48px;border-color:rgba(255,255,255,.9);border-style:solid}.tl{left:0;top:0;border-width:2px 0 0 2px}.tr{right:0;top:0;border-width:2px 2px 0 0}.bl{left:0;bottom:0;border-width:0 0 2px 2px}.br{right:0;bottom:0;border-width:0 2px 2px 0}
-        .bottom{width:min(92vw,520px);margin:0 auto;pointer-events:auto}.panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:18px;backdrop-filter:blur(16px);box-shadow:0 18px 60px rgba(0,0,0,.35)}
-        #intro{text-align:center} #intro h1,#reveal h1{margin:0 0 8px;font-size:clamp(23px,6vw,34px);line-height:1;letter-spacing:-.03em} #intro p,#reveal p{margin:0 0 16px;color:var(--muted);line-height:1.42;font-size:14px}
-        button,.cta{width:100%;min-height:52px;border:0;border-radius:15px;font:inherit;font-weight:800;letter-spacing:.02em;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center} #start,.cta{background:#fff;color:#050505} #start:disabled{opacity:.6;cursor:default}
-        #status{margin-top:11px;min-height:20px;color:var(--muted);font-size:12px;line-height:1.4} #fatal{display:none;margin-top:10px;color:#ffb6b6;font-size:12px;line-height:1.45}
-        #browserHint{display:none;margin-top:12px;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.15);color:#fff;background:rgba(255,255,255,.06);font-size:12px;line-height:1.45}
-        #reveal{display:none;transform:translateY(18px);opacity:0;transition:opacity .28s ease,transform .28s ease} body.found #reveal{display:block;opacity:1;transform:translateY(0)} body.found #intro{display:none} body.found .center-guide{opacity:0}
-        .found-chip{display:inline-block;margin-bottom:10px;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.78)} .secondary{margin-top:10px;text-align:center;color:rgba(255,255,255,.58);font-size:11px}.mindar-ui-overlay{z-index:5!important}
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="google-site-verification" content="29md0HCdgHjmcMPQ5421Ejz4SbBnx88GwK8hf1PLjcM">
+  <title>Shot Final | Fotografía y video de eventos musicales</title>
+  <meta name="description" content="Página de Shot Final: fotografía de DJs, conciertos y eventos musicales. Conoce nuestro portafolio o contáctanos por Instagram.">
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/">
+  <meta http-equiv="refresh" content="0; url=./shot-final/">
+  <link rel="icon" href="assets/logo-shot-final-oficial.jpg" type="image/jpeg">
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#111;color:#fff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;text-align:center}
+    main{max-width:540px;padding:32px}
+    a{color:#fff;text-underline-offset:4px}
+    .actions{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:24px}
+    .actions a{padding:12px 18px;border:1px solid #777;border-radius:99px}
+  </style>
 </head>
 <body>
-    <a-scene id="ar-scene" mindar-image="imageTargetSrc: assets/targets.mind; autoStart: false; maxTrack: 1; uiLoading: no; uiScanning: no; uiError: no;" color-space="sRGB" renderer="alpha: true; colorManagement: true; physicallyCorrectLights: true" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-        <a-entity id="shot-target" mindar-image-target="targetIndex: 0"></a-entity>
-        <a-entity id="shot-target-print" mindar-image-target="targetIndex: 1"></a-entity>
-    </a-scene>
-
-    <div class="ui">
-        <div class="topbar"><div class="brand">SHOT FINAL</div></div>
-        <div class="center-guide" aria-hidden="true"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span></div>
-        <div class="bottom">
-            <section id="intro" class="panel">
-                <h1>Apunta al logo.</h1>
-                <p>Activa la cámara y enfoca el logo original de Shot Final.</p>
-                <button id="start" type="button">Activar cámara</button>
-                <div id="status">No necesitas instalar ninguna app.</div>
-                <div id="fatal"></div>
-                <div id="browserHint">Si abriste este enlace dentro de ChatGPT, Facebook, Instagram u otra app, usa el menú del navegador y elige <strong>Abrir en Chrome</strong> o <strong>Abrir en Safari</strong>. Después permite el acceso a la cámara.</div>
-            </section>
-            <section id="reveal" class="panel">
-                <span class="found-chip">Logo reconocido</span>
-                <h1>Shot Final</h1>
-                <p>Identidad confirmada. Abriendo el portafolio oficial.</p>
-                <a class="cta" href="https://shotfinal44.pixieset.com/portafolio/" rel="noopener">Abrir portafolio ahora</a>
-                <div class="secondary">shotfinal44.pixieset.com/portafolio</div>
-            </section>
-        </div>
+  <main>
+    <h1>Shot Final</h1>
+    <p>Fotografía y video para DJs, conciertos y eventos musicales.</p>
+    <p>Estamos abriendo la página pública de Shot Final.</p>
+    <div class="actions">
+      <a href="./shot-final/">Ir a Shot Final</a>
+      <a href="https://shotfinal44.pixieset.com/portafolio/">Ver portafolio</a>
+      <a href="https://www.instagram.com/somosshot.final/">Contactar por Instagram</a>
     </div>
-
-    <script>
-        const PORTFOLIO_URL='https://shotfinal44.pixieset.com/portafolio/';
-        const scene=document.querySelector('#ar-scene');
-        const targets=[
-            document.querySelector('#shot-target'),
-            document.querySelector('#shot-target-print')
-        ].filter(Boolean);
-        const startButton=document.querySelector('#start');
-        const status=document.querySelector('#status');
-        const fatal=document.querySelector('#fatal');
-        const browserHint=document.querySelector('#browserHint');
-        let started=false;
-        let starting=false;
-        let redirectScheduled=false;
-
-        const setStatus=(text)=>{status.textContent=text};
-        const showError=(text,showHint=false)=>{
-            fatal.style.display='block';
-            fatal.textContent=text;
-            browserHint.style.display=showHint?'block':'none';
-            startButton.disabled=false;
-            startButton.textContent='Intentar de nuevo';
-            starting=false;
-        };
-
-        const waitForMindAR=(timeout=10000)=>new Promise((resolve,reject)=>{
-            const begun=Date.now();
-            const check=()=>{
-                const system=scene.systems && scene.systems['mindar-image-system'];
-                if(scene.hasLoaded && system) return resolve(system);
-                if(Date.now()-begun>timeout) return reject(new Error('MindAR no terminó de cargar.'));
-                requestAnimationFrame(check);
-            };
-            check();
-        });
-
-        const forceTransparentRenderer=()=>{
-            try{
-                if(scene.renderer){
-                    scene.renderer.setClearColor(0x000000,0);
-                    scene.renderer.setClearAlpha(0);
-                    scene.renderer.domElement.style.background='transparent';
-                }
-            }catch(e){console.warn('No se pudo forzar transparencia del renderer',e)}
-        };
-
-        const normalizeCameraVideo=()=>{
-            const videos=document.querySelectorAll('video');
-            videos.forEach(v=>{
-                Object.assign(v.style,{
-                    position:'fixed',inset:'0',width:'100vw',height:'100dvh',
-                    minWidth:'100vw',minHeight:'100dvh',objectFit:'cover',
-                    objectPosition:'center center',zIndex:'0',display:'block',background:'#000'
-                });
-            });
-        };
-
-        const explainCameraError=(err)=>{
-            const name=err && err.name ? err.name : '';
-            if(name==='NotAllowedError') return ['El permiso de cámara está bloqueado para esta página. Permite la cámara en el navegador e inténtalo otra vez.',true];
-            if(name==='NotFoundError') return ['No se encontró una cámara disponible en este dispositivo.',false];
-            if(name==='NotReadableError') return ['La cámara existe, pero otra aplicación o el sistema la está usando. Cierra otras apps que usen cámara e inténtalo de nuevo.',false];
-            if(name==='SecurityError' || name==='TypeError') return ['Este navegador no permite usar la cámara en este contexto. Abre el enlace directamente en Chrome o Safari.',true];
-            return ['No se pudo iniciar la cámara. Abre esta página directamente en Chrome o Safari y revisa el permiso de cámara.',true];
-        };
-
-        scene.addEventListener('renderstart',forceTransparentRenderer);
-        scene.addEventListener('loaded',forceTransparentRenderer);
-
-        startButton.addEventListener('click',async()=>{
-            if(started||starting) return;
-            starting=true;
-            fatal.style.display='none';
-            browserHint.style.display='none';
-            startButton.disabled=true;
-            startButton.textContent='Solicitando cámara…';
-            setStatus('Comprobando acceso a la cámara.');
-
-            try{
-                if(!window.isSecureContext) throw new DOMException('HTTPS requerido','SecurityError');
-                if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new DOMException('getUserMedia no disponible','TypeError');
-
-                const testStream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'}}});
-                testStream.getTracks().forEach(track=>track.stop());
-
-                setStatus('Permiso concedido. Iniciando reconocimiento…');
-                startButton.textContent='Iniciando…';
-
-                const system=await waitForMindAR();
-                forceTransparentRenderer();
-                system.start();
-
-                setTimeout(()=>{
-                    normalizeCameraVideo();
-                    forceTransparentRenderer();
-                },300);
-                setTimeout(()=>{
-                    normalizeCameraVideo();
-                    forceTransparentRenderer();
-                },1200);
-
-                setTimeout(()=>{
-                    if(!started && starting) showError('La cámara recibió permiso, pero el motor de reconocimiento no terminó de iniciar. Prueba abrir el enlace directamente en Chrome o Safari.',true);
-                },15000);
-            }catch(err){
-                console.error(err);
-                const [message,hint]=explainCameraError(err);
-                showError(message,hint);
-            }
-        });
-
-        scene.addEventListener('arReady',()=>{
-            normalizeCameraVideo();
-            forceTransparentRenderer();
-            started=true;
-            starting=false;
-            document.body.classList.add('scanning');
-            startButton.disabled=true;
-            startButton.textContent='Cámara activa';
-            setStatus('Cámara activa. Apunta al logo completo de Shot Final.');
-            fatal.style.display='none';
-            browserHint.style.display='none';
-        });
-
-        scene.addEventListener('arError',()=>{
-            if(!started) showError('MindAR no pudo abrir la cámara. Revisa los permisos o abre el enlace directamente en Chrome o Safari.',true);
-        });
-
-        const handleTargetFound=()=>{
-            if(redirectScheduled) return;
-            redirectScheduled=true;
-            document.body.classList.add('found');
-            document.body.classList.remove('scanning');
-            if(navigator.vibrate) navigator.vibrate(35);
-            setTimeout(()=>window.location.assign(PORTFOLIO_URL),900);
-        };
-
-        targets.forEach(target=>target.addEventListener('targetFound',handleTargetFound));
-    </script>
+  </main>
 </body>
 </html>
