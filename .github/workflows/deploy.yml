@@ -1,4 +1,4 @@
-name: Build and deploy Shot Final WebAR
+name: Deploy Shot Final public site
 
 on:
   push:
@@ -17,76 +17,49 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-
-      - name: Restore target images
+      - name: Prepare static website and original brand images
         shell: bash
         run: |
-          mkdir -p assets
-          base64 --decode assets/target.b64 > assets/target.png
-          base64 --decode assets/target-real.b64 > assets/target-real.jpg
-          cp assets/target-real.jpg assets/logo-shot-final-oficial.jpg
-          file assets/target.png
-          file assets/target-real.jpg
-          file assets/logo-shot-final-oficial.jpg
-
-      - name: Install MindAR compiler dependencies
-        run: |
-          npm init -y
-          npm install mind-ar@1.2.5 canvas@2.11.2
-
-      - name: Compile visual targets
-        run: node scripts/compile-target.mjs
-
-      - name: Prepare static site
-        shell: bash
-        run: |
+          set -euo pipefail
           mkdir -p _site/assets _site/shot-final
           cp index.html _site/index.html
           cp shot-final/index.html _site/shot-final/index.html
           cp sitemap.xml _site/sitemap.xml
           cp robots.txt _site/robots.txt
           cp googleed1a60310cb8845f.html _site/googleed1a60310cb8845f.html
-          cp assets/targets.mind _site/assets/targets.mind
-          cp assets/logo-shot-final-oficial.jpg _site/assets/logo-shot-final-oficial.jpg
-          cp assets/target.png _site/assets/logo-shot-final-alto-contraste.png
+          base64 --decode assets/target-real.b64 > _site/assets/logo-shot-final-oficial.jpg
+          base64 --decode assets/target.b64 > _site/assets/logo-shot-final-alto-contraste.png
           touch _site/.nojekyll
 
-      - name: Verify WebAR and identity invariants
+      - name: Verify logo search and portfolio navigation
         shell: bash
         run: |
           set -euo pipefail
           test -s _site/index.html
           test -s _site/shot-final/index.html
-          test -s _site/assets/targets.mind
           test -s _site/assets/logo-shot-final-oficial.jpg
           test -s _site/assets/logo-shot-final-alto-contraste.png
           test -s _site/sitemap.xml
           test -s _site/robots.txt
           test -s _site/googleed1a60310cb8845f.html
-
-          grep -Fq 'targetIndex: 0' _site/index.html
-          grep -Fq 'targetIndex: 1' _site/index.html
+          grep -Fq 'http-equiv="refresh" content="0; url=./shot-final/"' _site/index.html
           grep -Fq 'noindex, follow' _site/index.html
-          grep -Fq 'window.location.assign(PORTFOLIO_URL)' _site/index.html
-          grep -Fq 'https://shotfinal44.pixieset.com/portafolio/' _site/index.html
           grep -Fq 'index, follow, max-image-preview:large' _site/shot-final/index.html
           grep -Fq 'https://shotfinal44.pixieset.com/portafolio/' _site/shot-final/index.html
+          grep -Fq 'https://www.instagram.com/somosshot.final/' _site/shot-final/index.html
           grep -Fq '"url": "https://shotfinal44.pixieset.com/portafolio/"' _site/shot-final/index.html
-          grep -Fq 'https://edixteracosta-commits.github.io/shot-final-webar/shot-final/' _site/shot-final/index.html
           grep -Fq 'logo-shot-final-oficial.jpg' _site/shot-final/index.html
           grep -Fq 'logo-shot-final-alto-contraste.png' _site/shot-final/index.html
           grep -Fq '<loc>https://edixteracosta-commits.github.io/shot-final-webar/shot-final/</loc>' _site/sitemap.xml
-          grep -Fq 'logo-shot-final-alto-contraste.png' _site/sitemap.xml
           grep -Fq 'Sitemap: https://edixteracosta-commits.github.io/shot-final-webar/sitemap.xml' _site/robots.txt
+          if grep -Eiq 'mindar|aframe|ar-scene|activar cámara' _site/index.html _site/shot-final/index.html; then
+            echo "Unexpected second-camera reference in public pages"
+            exit 1
+          fi
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
@@ -102,7 +75,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
-
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
