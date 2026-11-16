@@ -49,7 +49,7 @@ jobs:
           # Both public HTML pages must be crawlable; /shot-final/ is the canonical URL.
           grep -Fq 'index, follow, max-image-preview:large' _site/index.html
           grep -Fq 'index, follow, max-image-preview:large' _site/shot-final/index.html
-          ! grep -Eiq 'noindex|http-equiv=["'"']refresh' _site/index.html _site/shot-final/index.html
+          ! grep -Eiq 'noindex|http-equiv=.refresh' _site/index.html _site/shot-final/index.html
           grep -Fq 'rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/"' _site/index.html
           grep -Fq 'rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/"' _site/shot-final/index.html
           grep -Fq 'logo-shot-final-oficial.jpg' _site/index.html
