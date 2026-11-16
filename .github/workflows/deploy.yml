@@ -46,9 +46,16 @@ jobs:
           test -s _site/sitemap.xml
           test -s _site/robots.txt
           test -s _site/googleed1a60310cb8845f.html
-          grep -Fq 'http-equiv="refresh" content="0; url=./shot-final/"' _site/index.html
-          grep -Fq 'noindex, follow' _site/index.html
+          # Both public HTML pages must be crawlable; /shot-final/ is the canonical URL.
+          grep -Fq 'index, follow, max-image-preview:large' _site/index.html
           grep -Fq 'index, follow, max-image-preview:large' _site/shot-final/index.html
+          ! grep -Eiq 'noindex|http-equiv=["'"']refresh' _site/index.html _site/shot-final/index.html
+          grep -Fq 'rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/"' _site/index.html
+          grep -Fq 'rel="canonical" href="https://edixteracosta-commits.github.io/shot-final-webar/shot-final/"' _site/shot-final/index.html
+          grep -Fq 'logo-shot-final-oficial.jpg' _site/index.html
+          grep -Fq 'logo-shot-final-alto-contraste.png' _site/index.html
+          file _site/assets/logo-shot-final-oficial.jpg | grep -Fq 'JPEG image data'
+          file _site/assets/logo-shot-final-alto-contraste.png | grep -Fq 'PNG image data'
           grep -Fq 'https://shotfinal44.pixieset.com/portafolio/' _site/shot-final/index.html
           grep -Fq 'https://www.instagram.com/somosshot.final/' _site/shot-final/index.html
           grep -Fq '"url": "https://shotfinal44.pixieset.com/portafolio/"' _site/shot-final/index.html
